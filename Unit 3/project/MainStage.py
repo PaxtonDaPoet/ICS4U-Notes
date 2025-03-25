@@ -4,7 +4,7 @@ import sys
 from SnakeBattleGame import Game
 from snake import Snake
 
-from MySnakeTemplate import MySnakeTemplate
+from Paxton import Paxton
 from MySnakeTemplate2 import MySnakeTemplate2
 from MySnakeTemplate3 import MySnakeTemplate3
 
@@ -16,7 +16,7 @@ WIDTH, HEIGHT = 800, 600
 def main():
     m,n = Snake.matrix_size()
     snakes = [ ]
-    snakes.append(MySnakeTemplate())
+    snakes.append(Paxton())
     snakes.append(MySnakeTemplate2())
     snakes.append(MySnakeTemplate3())
 
