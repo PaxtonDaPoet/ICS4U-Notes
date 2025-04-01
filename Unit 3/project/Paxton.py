@@ -1,80 +1,71 @@
 from snake import Snake
 import random
 
-'''
-To use the Template:
-1. Change this file name `MySnakeTemplate.py` to your own/nick name
-2. Change this class name `MySnakeTemplate` to your own/nick name
-3. Implement the TODO sections
-'''
-class Paxton(Snake):
+class BlueSnake(Snake):
     def __init__(self):
-        # TODO: Construct your snake
-        # start_x, start_y should be your assigned starting position.
-        # length + attack + hp should be added up to a maximum of 10; otherwise, the snake will be disqualified and removed from the game.
-        x, y = (15, 15)
-        color = (255,0,0)
-        name = __name__
-        length = 150
-        atk = 10
-        hp = 20
-        super().__init__(x, y, color, name, length, atk, hp)
-
+        self.x = 0  # Start at the leftmost position (x=0)
+        self.y = Snake.MATRIX_SIZE[1] - 1  # Start at the bottom row (y=MATRIX_SIZE[1] - 1)
+        
+        color = (0, 0, 255)  # Blue color
+        name = "BlueSnake"
+        
+        length = 100
+        atk = 50
+        hp = 50
+        
+        super().__init__(self.x, self.y, color, name, length, atk, hp)
+    
     def move(self) -> None:
-        # TODO: Write your own find next moving direction logic
-        direction = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-        direction = random.choice(direction)
-
-        return super().move(direction)
-
-    # [OPTIONAL]
-    def detect(self, map : list[list[list]]) -> None:
-        # TODO:  You can utilize the detect feature called every round
-        #        to store any value that's helpfull for your move() direction logic
-        # NOTE:
-        #   1. ONLY allow to have a MAXIMUM runtine of 1 second!
-        #   2. STORE any information as ATTRIBUTES.
-        #   3. DO NOT return anything
-        super().detect(map) # Do nothing
-
-    def _checkCollision(self) -> bool:
-        # TODO: [OPTIONAL] Write a helper method to check if the snake would collide with the wall
-        return None
-
+        # Pick a random direction
+        direction = random.choice([[0, -1], [1, 0], [-1, 0], [0, 1]])  
+        
+        # Check for valid direction
+        while self._checkCollision(direction):
+            direction = random.choice([[0, -1], [1, 0], [-1, 0], [0, 1]])
+        
+        # If the snake doesn't collide, move it
+        super().move(direction)
+    
+    def detect(self, map: list[list[list]]) -> None:
+        self.map_data = map  # Store the map data, can be used for further logic
+    
+    def _checkCollision(self, direction: tuple[int, int]) -> bool:
+        # Only unpack x, y coordinates from body_positions
+        head_x, head_y = self.body_positions[0][:2]
+        
+        next_x = head_x + direction[0]
+        next_y = head_y + direction[1]
+        
+        # Check for boundary collisions
+        if next_x < 0 or next_x >= Snake.MATRIX_SIZE[0] or next_y < 0 or next_y >= Snake.MATRIX_SIZE[1]:
+            return True
+        
+        # Check for self-collision
+        if (next_x, next_y) in [body[:2] for body in self.body_positions[1:]]:
+            return True
+        
+        return False
+    
     def _getPosition(self) -> tuple[int, int]:
-        # TODO: Write a helper method to get the current head position of the snake
-        return None
-
+        return self.body_positions[0][:2]  # Return only x, y position
+    
+    def get_y(self) -> int:
+        return self.body_positions[0][1]  # Access the y coordinate only
 
 def main():
-    '''
-    You can write your own testing code here
-    '''
-    # Initialize the snake
-    snake = Paxton()
+    snake = BlueSnake()
     print(snake)
 
-    # Grow the snake
-    snake.grow()
+    # Grow the snake by 3 units
     snake.grow()
     snake.grow()
     snake.grow()
     print(snake)
 
-    snake.move()
-    print(snake)
+    # Move the snake 7 times
+    for _ in range(7):
+        snake.move()
+        print(snake)
 
-    snake.move()
-    print(snake)
-
-    snake.move()
-    print(snake)
-
-    snake.move()
-    print(snake)
-
-    snake.move()
-    print(snake)
-
-    snake.move()
-    print(snake)
+if __name__ == "__main__":
+    main()
