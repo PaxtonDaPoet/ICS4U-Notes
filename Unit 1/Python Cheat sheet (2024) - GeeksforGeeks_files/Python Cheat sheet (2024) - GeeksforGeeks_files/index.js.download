@@ -1,0 +1,244 @@
+function getModeCodeMirror(e){let t=[{name:"C",mime:"text/x-csrc",mode:"clike",ext:["c","h","ino"]},{name:"Cpp",mime:"text/x-c++src",mode:"clike",ext:["cpp","c++","cc","cxx","hpp","h++","hh","hxx"],alias:["cpp"]},{name:"Cpp14",mime:"text/x-c++src",mode:"clike",ext:["cpp","c++","cc","cxx","hpp","h++","hh","hxx"],alias:["cpp"]},{name:"csharp",mime:"text/x-csharp",mode:"clike",ext:["cs"],alias:["csharp"]},{name:"CSS",mime:"text/css",mode:"css",ext:["css"]},{name:"HTML",mime:"text/html",mode:"htmlmixed",ext:["html","htm","handlebars","hbs"],alias:["xhtml"]},{name:"Java",mime:"text/x-java",mode:"clike",ext:["java"]},{name:"JavaScript",mime:"text/javascript",mode:"javascript",ext:["js"],alias:["ecmascript","js","node"]},{name:"jscript",mime:"text/javascript",mode:"javascript",ext:["js"],alias:["ecmascript","js","node"]},{name:"JSON",mimes:["application/json","application/x-json"],mode:"javascript",ext:["json","map"],alias:["json5"]},{name:"MySQL",mime:"text/x-mysql",mode:"sql"},{name:"Perl",mime:"text/x-perl",mode:"perl",ext:["pl","pm"]},{name:"PHP",mime:"text/x-php",mode:"php",ext:["php","php3","php4","php5","php7","phtml"]},{name:"Python",mime:"text/x-python",mode:"python",ext:["BUILD","bzl","py","pyw"],file:/^(BUCK|BUILD)$/},{name:"Python3",mime:"text/x-python",mode:"python",ext:["BUILD","bzl","py","pyw"],file:/^(BUCK|BUILD)$/},{name:"Ruby",mime:"text/x-ruby",mode:"ruby",ext:["rb"],alias:["jruby","macruby","rake","rb","rbx"]},{name:"Scala",mime:"text/x-scala",mode:"clike",ext:["scala"]},{name:"SQL",mime:"text/x-sql",mode:"sql",ext:["sql"]},{name:"SQLite",mime:"text/x-sqlite",mode:"sql"},{name:"LaTeX",mime:"text/x-latex",mode:"stex",ext:["text","ltx","tex"],alias:["tex"]},{name:"VB.NET",mime:"text/x-vb",mode:"vb",ext:["vb"]},{name:"Vue.js Component",mime:"text/x-vue",mode:"vue",ext:["vue"]},{name:"Go",mime:"text/x-go",mode:"go",ext:["go"]}],o=e;"node"!==e&&"nodejs"!==e||(o="javascript");for(var i=0;i<t.length;i++){var r=t[i];if(r.name.toLowerCase()==o)return r;if(r.alias)for(var n=0;n<r.alias.length;n++)if(r.alias[n].toLowerCase()==name)return r}}(()=>{var e=document.currentScript?document.currentScript.getAttribute("environment"):null;let o=document.currentScript?document.currentScript.getAttribute("domain"):null,i=document.currentScript?document.currentScript.getAttribute("no-scroll"):null,l=!0,s="https://codejudge.geeksforgeeks.org/",n="https://assets.geeksforgeeks.org/codetabs",r=["c","cpp","cpp14","csharp","java","javascript","html","css","node","perl","php","python","python3","py","py3","scala","ruby","go"],d=("development"===e?(s="https://codejudgetest.geeksforgeeks.org/",n="https://assets.geeksforgeeks.org/codetabs-dev"):"local"===e&&(s="https://codejudgetest.geeksforgeeks.org/",n="/static-tabs"),document.createElement("template")),a,c=`<svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.0" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg> `,t=`
+        <div class="border" id="edit-code-loader" class="gfg-icon" hidden></div>
+        <svg xmlns="http://www.w3.org/2000/svg" id="edit-close-icon" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.0" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+            <path d="M13.5 6.5l4 4" />
+        </svg>`;d.innerHTML=`
+    <style>
+      :host {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      ::slotted(gfg-panel) {
+        flex-basis: 100%;
+      }
+      .codeblock-container[data-content]::after,
+      .codeblock-container[data-danger-content]::after {
+        content: attr(data-content);
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 4px 12px;
+        font-size: 12px;
+        letter-spacing: 0.05em;
+        font-family: inherit;
+        background-color: rgb(217, 217, 217);
+        color: #424242 !important;
+      }
+      .codeblock-container[data-danger-content]::after {
+        color: rgb(132, 5, 5) !important;
+        content: attr(data-danger-content);
+      }
+      .codeblock-container{
+        position: relative;
+        width: 100%;
+        font-family: sans-serif;
+      }
+      .code-container{
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ddd;
+        clear: left;
+
+      }
+      
+      #slot-panel::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: #e0e0e0;
+        width: 8px !important;
+      }
+
+      #slot-panel::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: #999;
+        width: 8px ; 
+      }
+      #slot-panel::-webkit-scrollbar {
+        width: 8px; 
+      }
+      #slot-panel::-webkit-scrollbar-thumb:hover {
+        cursor: pointer;
+      }
+      .editor-buttons-div,
+      .w-56 {
+        min-width: 56px;
+      }
+        .editor-buttons-div{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+      .gfg-code{
+        padding: 0;
+        width: 100%;
+      }
+      .editor-buttons{
+        display:flex;
+        flex-direction: column;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 100px;
+        margin-top: 20px;
+        align-items: center;
+      }
+      .editor-buttons.output-box {
+        margin-top: 0px;
+      }
+      .editor-buttons.output-box button {
+        margin-bottom: 0 !important;
+      }
+      .code-button{
+        background: white;
+        margin-bottom: 10px;
+        border: 2px;
+        background: #e5e5e5;
+        border-radius: 50px;
+        width: 34px !important;
+        height: 34px !important;
+        cursor: pointer;
+      }
+        #expand-code-button{
+            margin-bottom: 0px;
+        }
+      .code-output{
+        background: #efefef;
+        border-radius: 8px;
+        width: 100%;
+        margin: 10px 2px 5px 2px;
+      }
+      .close-output-button{
+        margin-bottom: 10px;
+      }
+      .code-output-content{
+        padding: 8px 16px;
+        margin: 0;
+        position: sticky;
+        position: -webkit-sticky;
+        margin-top: 10px;
+      }
+      .code-box {
+        display: flex;
+      }
+      .code-output-box {
+        display: flex;
+        align-items: center;
+      }
+      .generated-output{
+        font-size: 15px;
+        white-space: pre-wrap;
+      }
+      .row-output{
+        color: black;
+        font-size: 16px;
+        padding : 10px;
+      }
+      .border {
+        width: 34px !important;
+        height: 34px !important;
+        position: absolute;
+        background: transparent;
+        border-radius: 50%;
+        border: 2px dashed #000;
+        margin-left: -8px;
+        margin-top: -9px;
+        animation-name: rotate;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      .codeblock-container[data-mode=dark] .border {
+        border-color: white !important;
+      }
+      #icon-tabler-copy{
+        margin-bottom: -4px;
+        cursor: pointer;
+      }
+      .gfg-icon{
+        margin-left: auto;
+        margin-right: auto;
+        display: block !important;
+      }
+      
+        @keyframes rotate {
+            from{ transform: rotate(-360deg); }
+            to{ transform: rotate(360deg); }
+        }
+        #code-output-element #jsFrame {
+            background-color: transparent;
+            border: unset;
+            width: 100%;
+        }
+    </style>
+
+    <div class="codeblock-container">
+        <slot name="tab"></slot>
+        <div class="code-container">
+            <div class="code-box">
+                <div id="editor-buttons-div" class="editor-buttons-div" >
+                    <div id="editor-buttons" class="editor-buttons">
+                        <button class="code-button" id="copy-code-button" title="Copy Code">
+                            <svg xmlns="http://www.w3.org/2000/svg"  class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.0" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+                            <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+                            </svg>
+                        </button>
+                        <button class="code-button" id="edit-close-button" title="Edit Code" hidden=true>
+                            ${t}
+                        </button>
+                        <button class="code-button" id="run-code-button" title="Run Code and See Output">
+                            <div class="border" id="run-code-loader" class="gfg-icon" hidden></div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.0" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M7 4v16l13 -8z" />
+                            </svg>
+                        </button>
+                        <button class="code-button" id="mode-button"  title="Light mode" hidden=true>
+                            ${c}
+                        </button>
+                    </div>
+                </div>
+                <div id="slot-panel" class="gfg-code">
+                    <slot name="panel"></slot>
+                </div>
+            </div>
+            <div class="code-output-box" id="code-output-box" >
+                <div class="editor-buttons w-56 output-box" title="Close Output">
+                    <button class="code-button" id="close-output-button" hidden>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M9 12h-3.586a1 1 0 0 1 -.707 -1.707l6.586 -6.586a1 1 0 0 1 1.414 0l6.586 6.586a1 1 0 0 1 -.707 1.707h-3.586v6h-6v-6z" />
+                            <path d="M9 21h6" />
+                        </svg>
+                    </button>
+                </div> 
+                <div class="code-output" id="code-output" hidden>
+                    <div class="row-output">
+                        <pre class="generated-output" id="code-output-element"></pre>
+                    </div> 
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    `;class h extends HTMLElement{constructor(){super(),this._defaultLanguage=this._getDefaultLanguage(),this.codeCache=new Map,this._onSlotChange=this._onSlotChange.bind(this),this._copyCode=this._copyCode.bind(this),this._runCode=this._runCode.bind(this),this._editClose=this._editClose.bind(this),this._closeOutput=this._closeOutput.bind(this),this._closeButton=this._closeButton.bind(this),this._changeMode=this._changeMode.bind(this),this._setInitialtheme=this._setInitialtheme.bind(this),this._setCodeMirrorEditor=this._setCodeMirrorEditor.bind(this),this._runStaticCode=this._runStaticCode.bind(this),this._addCodeHighlightButton=this._addCodeHighlightButton.bind(this),this._extractCode=this._extractCode.bind(this),this._updateSelectedTabOnAllGFGTabs=this._updateSelectedTabOnAllGFGTabs.bind(this),this._setupCollapsibleCodeButtons=this._setupCollapsibleCodeButtons.bind(this),this.__initializeCodeMirror=this.__initializeCodeMirror.bind(this),this.__checkCodeTabsButtonHidden=this.__checkCodeTabsButtonHidden.bind(this),this._codeMirrorEditor=!1,this._codeMirrorEditorMap={},this._codeMirrorCls=null,this.currentSelectedTab=!1,this.attachShadow({mode:"open"}),this.shadowRoot.appendChild(d.content.cloneNode(!0)),this._tabSlot=this.shadowRoot.querySelector("slot[name=tab]"),this._panelSlot=this.shadowRoot.querySelector("slot[name=panel]"),this._codeElement=this.shadowRoot.querySelector("div[id=slot-panel]"),this._copyCodeElement=this.shadowRoot.querySelector("button[id=copy-code-button]"),this._runCodeElement=this.shadowRoot.querySelector("button[id=run-code-button]"),this._editCloseElement=this.shadowRoot.querySelector("button[id=edit-close-button]"),this._closeOutputButton=this.shadowRoot.querySelector("button[id=close-output-button]"),this._ModeButton=this.shadowRoot.querySelector("button[id=mode-button]"),this._codeOutputBox=this.shadowRoot.querySelector("div[id=code-output]"),this._editorButtonDiv=this.shadowRoot.querySelector("div[id=editor-buttons-div]"),this._editorButtons=this.shadowRoot.querySelector("div[id=editor-buttons]"),this._runOnIDE="true"==this.getAttribute("data-run-ide"),this._codeTabsButtonHidden=null,this._backGround=document.querySelector("#data-mode"),this._backGround||(this._backGround=document.getElementsByTagName("body")[0]),this._setInitialtheme();let t=()=>{this._setInitialtheme()};new MutationObserver(function(e){e.forEach(e=>{if("attributes"===e.type)switch(e.attributeName){case"data-dark-mode":case"data-theme":t()}})}).observe(this._backGround,{attributeFilter:["data-dark-mode","data-theme"],subtree:!0}),this._panelSlot.addEventListener("slotchange",this._onSlotChange),this._copyCodeElement.addEventListener("click",this._copyCode),this._runCodeElement.addEventListener("click",this._runCode),this._editCloseElement.addEventListener("click",this._editClose),this._closeOutputButton.addEventListener("click",this._closeOutput),this._ModeButton.addEventListener("click",this._changeMode)}_addCodeHighlightButton(){if(this._isLoadingInEditor())return null;Array.from(this.querySelectorAll("pre")).forEach(n=>{var e=Array.from(n.querySelectorAll(":scope > span"));let o=[];if(e.forEach((e,t)=>{e.classList.contains("driver-code")&&o.push({span:e,index:t})}),0===o.length)return null;o.forEach(({span:o})=>{e=" { ... } ",t=()=>{var e,t;e=o,t=i,"none"===e.style.display?(e.style.display="inline",t.textContent="Hide",t.classList.add("active")):(e.style.display="none",t.textContent=" { ... } ",t.classList.remove("active"))},(r=document.createElement("button")).textContent=e,r.className="code-collapse-btn",r.addEventListener("click",t);let i=r;var e,t,r;n.insertBefore(i,o),o.style.display="none"})}),this.isCollapseButtonAdded=!0}_isLoadingInEditor(){return!!this.getAttribute("code-editor")}_hideTabForSingleTab(e){Array.isArray(e)&&1==e.length&&(e[0].hidden=!0)}__checkCodeTabsButtonHidden(){if(null===this._codeTabsButtonHidden){let e=this;for(;null!=e;){if(e.className.includes("hide-codetabs-buttons")){this._codeTabsButtonHidden=!0;var t=this._editorButtonDiv;t&&t.remove();break}e=e.parentElement}}return this._codeTabsButtonHidden}connectedCallback(){this._addCodeHighlightButton(),this.addEventListener("click",this._onClick),this.hasAttribute("role")||this.setAttribute("role","tablist"),this._isLoadingInEditor()&&(this._editorButtonDiv&&(this._editorButtonDiv.style.display="none"),l=!1),this.__checkCodeTabsButtonHidden(),this._hideTabForSingleTab(this._allTabs())}disconnectedCallback(){this.removeEventListener("keydown",this._onKeyDown),this.removeEventListener("click",this._onClick),this.removeEventListener("click",this._copyCode),this.removeEventListener("click",this._runCode),this.removeEventListener("click",this._editClose),this.removeEventListener("click",this._closeButton),this.removeEventListener("click",this._closeOutput),this.removeEventListener("click",this._changeMode)}_onSlotChange(e){this._linkPanels()}_linkPanels(){var e=this._allTabs(),e=(e.forEach(e=>{var t=e.nextElementSibling;t&&t.tagName&&"gfg-panel"!==t.tagName.toLowerCase()?console.error(`Tab #${e.id} is not a`+"sibling of a <gfg-panel>"):t&&e&&(e.setAttribute("aria-controls",t.id),t.setAttribute("aria-labelledby",e.id),(t=t.getAttribute("data-code-lang"))==this._defaultLanguage||t.includes("python")&&this._defaultLanguage.includes("python"))&&e.setAttribute("selected",!0)}),e.find(e=>e.selected)||e[0]);this._selectTab(e),this._editClose(null,!0)}_allPanels(){return Array.from(this.querySelectorAll("gfg-panel"))}_getSelectedPanel(){return this._allPanels().find(e=>!1===e.hidden)}_allTabs(){return Array.from(this.querySelectorAll("gfg-tab"))}_panelForTab(e){e=e.getAttribute("aria-controls");if(""!==e)return this.querySelector("#"+e)}reset(){var e=this._allTabs(),t=this._allPanels();e.forEach(e=>e.selected=!1),t.forEach(e=>e.hidden=!0)}_selectTab(e){if(this.reset(),e){var t=e.nextElementSibling;if(!t)throw new Error("No panel with id");t.hidden=!(e.selected=!0);var e=this.getAttribute("data-run-ide"),o=this._getSelectedPanel().getAttribute("data-code-lang");return"true"===e&&r.includes(o)?this._runCodeElement.hidden=!1:this._runCodeElement.hidden=!0,this._editCloseElement.hidden=!0,t}}__updateSelectedCodeLangOnGFGTab(e,t){var o=t.querySelectorAll(`[data-code-lang="${e}"]`);return!(0==o.length||1!==o.length&&t.querySelector(`[data-code-lang="${e}"][selected="true"]`)||!(e=o[0].previousElementSibling)&&1==e.getAttribute("selected")||(t._onTabChange(e),0))}_updateSelectedTabOnAllGFGTabs(e){}_onTabChange(e,t=!1){if(!e.selected){this._setTabMessage("",!1,!0),this._closeButton();var o,e=this._selectTab(e);this._closeOutput(),a&&a.abort();try{if(e)return o=e.getAttribute("data-code-lang"),this._editClose(null,!0,t),o}catch(e){console.log(e)}}}_onClick(e){"tab"===e.target.getAttribute("role")&&(e=this._onTabChange(e.target,!0))&&(this._setDefaultLanguageCookie(e),this._updateSelectedTabOnAllGFGTabs(e))}_removeUnwantedcontent(e){var e=e.cloneNode(!0),t=e.querySelectorAll(".code-collapse-btn");return 0<t.length&&t.forEach(e=>{var t=e.parentNode,o=e.previousSibling,o=(o&&o.nodeType===Node.TEXT_NODE&&(o.textContent=o.textContent.replace(/\s+$/,"")),[...t.childNodes].indexOf(e)),e=(e.remove(),[...t.childNodes].filter(e=>e.nodeType===Node.TEXT_NODE));0<e.length&&e[o]&&(t=e[o].textContent,e[o].textContent=t.replace(/^\n+|\n+$/g,""))}),e.textContent}_extractCode(e=!0){let t="";var o;if(!e||!this._codeMirrorEditor)return e=this._getSelectedPanel(),this.codeCache.has(e)?this.codeCache.get(e):(o=e.querySelector("pre"),t=this._removeUnwantedcontent(o),this.codeCache.set(e,t),t);t=this._codeMirrorEditor.getValue()}_copyCode(e){let t="";try{t=(this._codeMirrorEditor?(t=this._codeMirrorEditor.getValue()).split("\n").filter(e=>!(e.includes("//Driver Code Starts{")||e.includes("//Driver Code Ends }")||e.includes("#Driver Code Starts{")||e.includes("#Driver Code Ends }"))):(t=this._extractCode()).split("\n").filter(e=>!(e.includes("//Driver Code Starts{")||e.includes("//Driver Code Ends }")||e.includes("#Driver Code Starts{")||e.includes("#Driver Code Ends }")))).join("\n"),navigator.clipboard.writeText(t),this._setTabMessage("Code Copied!")}catch(e){this._setTabMessage("Error copying code",!0),console.log(e)}}_openLoginModal(){var e,t;return"true"===this.getAttribute("allow-code-exec")||(t="codeExecCount",e=parseInt(localStorage.getItem(t),10)||0,"gfg"===o&&e<5?(e++,localStorage.setItem(t,e),!0):!(t=document.querySelector(".login-modal-btn"))||"gfg"!==o||(t.click(),!1))}_runStaticCode(e){let t=this._codeOutputBox.querySelector("#code-output-element");try{require.config({packages:[{name:"StaticCodeCompiler",location:""+n,main:n+"/StaticCodeCompilerV1.min.js"}],waitSeconds:20}),require([n+"/StaticCodeCompilerV1.min.js"],function(){window.StaticCodeCompiler(e,!0,t)})}catch(e){console.log(e),t.innerHTML="Some Error Occured"}}async _runCode(){var i=this._openLoginModal();if(i&&(this._setTabMessage("",!1,!0),a=new AbortController,!this.loader||this.loader.hidden)){try{this._codeOutputBox.hidden=!1,this._closeOutputButton.hidden=!1,this._codeOutputBox.scrollIntoView({behavior:"smooth",block:"center"})}catch(e){return void console.log(e)}var r=this._codeOutputBox.querySelector("#code-output-element"),n="Some Error Occured, Please Try Again";this.loader=this._runCodeElement.querySelector("#run-code-loader"),this.loader.hidden=!1,this._runCodeElement.disabled=!0,r.innerHTML="Compiling...";let o=this._getSelectedPanel().getAttribute("data-code-lang");i=this._codeMirrorEditor?this._codeMirrorEditor.getValue():this._extractCode();if(["html","css"].includes(o))this._runStaticCode(i);else{let e,t;["javascript","jscript","node"].includes(o)&&(o="js");try{if("ERROR"===(e=await(e=await fetch(s+"submit-request",{signal:a.signal,method:"POST",withCredentials:!1,headers:{Accept:"application/json","Content-Type":"application/json"},body:JSON.stringify({language:o,code:i,input:"",save:!1})})).json()).status||!e.submission_id)return r.innerHTML=n,this.loader.hidden=!0,void(this._runCodeElement.disabled=!1)}catch(e){return r.innerHTML=n,this.loader.hidden=!0,void(this._runCodeElement.disabled=!1)}for(;;){try{t=await(t=await fetch(s+"get-status/"+e.submission_id,{signal:a.signal,method:"GET",withCredentials:!1,headers:{Accept:"application/json","Content-Type":"application/json"}})).json()}catch(e){return console.log(e),this.loader.hidden=!0,this._runCodeElement.disabled=!1,void(r.innerHTML=n)}if(!["IN-QUEUE","in-queue"].includes(t.status))break;await new Promise(e=>setTimeout(e,3e3))}if(t){let e;e=t.output||t.rntError||t.cmpError,r.innerHTML=e||"No Output"}else r.innerHTML=n}this.loader.hidden=!0,this._runCodeElement.disabled=!1}}_setCodeMirrorEditor(e){let i=this._codeMirrorCls;this._codeMirrorEditor=e,this._codeMirrorEditor.operation(()=>{this._codeMirrorEditor.eachLine(e=>{var t=this._codeMirrorEditor.getLineNumber(e),o=this._codeMirrorEditor.getLine(t);e.gutterMarkerSet=null!=e.gutterMarkerSet,!e.gutterMarkerSet&&o.includes("Driver Code Starts")&&(this._codeMirrorEditor.setGutterMarker(t,"CodeMirror-foldgutter"),this._codeMirrorEditor.foldCode(i.Pos(t,o.length)),e.gutterMarkerSet=!0)})}),this._codeMirrorEditor.refresh(),l||this._codeMirrorEditor.focus()}__hideCodePreview(e,t=!0){e.querySelector("pre").hidden=t}__initializeCodeMirror(r,e,t="dark",o={},i=()=>{}){if(!this._runOnIDE)throw Error("Codemirror Not Allowed as Run On IDE Disabled");if(this.__checkCodeTabsButtonHidden())throw Error("Codemirror Not Allowed as Codetabs Buttons are hidden");let n=e.id;if(l&&o[n])return o[n];let s=getModeCodeMirror(e.getAttribute("data-code-lang").toLowerCase());if(!s)throw Error("Not Supported in Codemirror");let d=e.querySelector("pre").innerText,a=(d=this._removeUnwantedcontent(e),"dark"===t?"monokai":"default");require([`codemirror/mode/${s.mode}/`+s.mode],()=>{l||(e.querySelector("pre").hidden=!0),o[n]=r(e,{extraKeys:{"Ctrl-Space":"autocomplete","Ctrl-Q":function(e){e.foldCode(e.getCursor())}},mode:s.mime,value:"string"==typeof d?d.trim():"",theme:a,autofocus:!1,lineNumbers:!0,styleActiveLine:!0,foldGutter:!0,gutters:["CodeMirror-linenumbers","breakpoints","CodeMirror-foldgutter"],foldOptions:{rangeFinder:function(e,t){if(!e.getLine(t.line).includes("Driver Code Starts"))return null;let o=t.line;for(var i=e.lineCount();o<i&&!e.getLine(o).includes("Driver Code Ends");)o++;return{from:r.Pos(t.line),to:r.Pos(o,e.getLine(o).length-1)}}}}),i(o[n])})}__editToCloseIcon(e){e.setAttribute("buttonType","edit"),e.setAttribute("title","Close Editor"),e.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg"  id="edit-close-icon" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.0" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M18 6l-12 12" />
+        <path d="M6 6l12 12" />
+    </svg>`}_requireAndInitializeCodeMirror(o=null,i=!1,r=!0){o=o||this._getSelectedPanel(),require.config({packages:[{name:"codemirror",location:n+"/codemirror",main:"lib/codemirror"}],waitSeconds:20}),require(["codemirror","codemirror/addon/mode/loadmode","codemirror/addon/selection/active-line","codemirror/addon/fold/foldcode","codemirror/addon/fold/foldgutter","codemirror/addon/fold/indent-fold","codemirror/addon/fold/comment-fold","codemirror/addon/fold/brace-fold"],e=>{var t;if(l||(t=this._editCloseElement,this.__editToCloseIcon(t)),this._codeMirrorCls=e,i)Array.from(this.querySelectorAll("gfg-panel")).forEach(t=>{try{this.__hideCodePreview(t),this.__initializeCodeMirror(e,t,this._ModeButton.getAttribute("mode"),this._codeMirrorEditorMap,e=>{t.id==o.id&&this._setCodeMirrorEditor(e)})}catch(e){console.log(e),this.__hideCodePreview(t,!1)}}),r&&Array.from(document.querySelectorAll("gfg-tabs")).forEach(e=>{e!=this&&e._requireAndInitializeCodeMirror(null,!0,!1)});else try{this.__hideCodePreview(o),this.__initializeCodeMirror(e,o,this._ModeButton.getAttribute("mode"),this._codeMirrorEditorMap,e=>{this._setCodeMirrorEditor(e)})}catch(e){console.log(e),this.__hideCodePreview(o,!1)}})}async _editClose(e,t=!1,o=!1){if(this._runOnIDE&&(!t||l))if(this._setTabMessage("",!1,!0),"edit"===this._editCloseElement.getAttribute("buttonType"))this._closeButton();else{var t=this._editCloseElement,i=t.querySelector("#edit-code-loader");i&&(i.hidden=!1);try{var r,n=this._getSelectedPanel(),s=this._codeMirrorEditorMap[n.id];s&&l?(l||this.__editToCloseIcon(t),r="dark"===this._ModeButton.getAttribute("mode")?"monokai":"default",s.setOption("theme",r),this._setCodeMirrorEditor(s)):this._requireAndInitializeCodeMirror(n,o,l)}catch(e){console.log(e)}}}_closeButton(){this._editCloseElement.setAttribute("buttonType","close"),this._editCloseElement.setAttribute("title","Edit Code"),this._editCloseElement.innerHTML=t;var e=this._getSelectedPanel(),e=(l||(e.querySelector("pre").hidden=!1),this._codeMirrorEditor=!1,e.querySelector(".CodeMirror"));e&&!l&&e.parentNode.removeChild(e)}_closeOutput(){this._codeOutputBox.hidden=!0,this._closeOutputButton.hidden=!0,this._codeOutputBox.querySelector("#code-output-element").innerHTML="Compiling...."}_setInitialtheme(e){if(this._backGround){var t=this.shadowRoot.querySelector(".codeblock-container");let e=this._backGround.getAttribute("data-theme");e=e||this._backGround.getAttribute("data-dark-mode");var o=["dark","true"].indexOf(e)<0?"dark":"light";this._ModeButton.setAttribute("mode",o),!this.hasAttributes()&&window.location.hostname.includes("write")||(this.setAttribute("data-mode","dark"==o?"light":"dark"),t.setAttribute("data-mode","dark"==o?"light":"dark")),this._changeMode()}null===i||"false"===i?(t=this.shadowRoot.querySelector("div[id=slot-panel]"))&&(t.style.maxHeight="70vh",t.style.overflowY="auto"):(o=this.shadowRoot.querySelector(".gfg-code"))&&(o.style.width="calc(100% - 64px)")}_changeMode(e){this._setTabMessage("",!1,!0);var t=this._ModeButton.getAttribute("mode");let o={mode:"dark",title:"Light Mode",icon:`<svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z" />
+        <path d="M6.343 17.657l-1.414 1.414" /><path d="M6.343 6.343l-1.414 -1.414" /><path d="M17.657 6.343l1.414 -1.414" /><path d="M17.657 17.657l1.414 1.414" /><path d="M4 12h-2" /><path d="M12 4v-2" /><path d="M20 12h2" /><path d="M12 20v2" />
+    </svg>`,theme:"monokai"};-1<["dark"].indexOf(t)&&(o={mode:"light",title:"Dark Mode",icon:c,theme:"default"}),this._ModeButton.setAttribute("mode",o.mode),this._ModeButton.setAttribute("title",o.title),this._ModeButton.innerHTML=o.icon,this._allPanels().forEach(e=>{e.querySelector("div.highlight")&&("dark"===o.mode?e.querySelector("div.highlight").classList.add("monokai"):e.querySelector("div.highlight").classList.remove("monokai"))}),this._codeMirrorEditor&&((t=document.getElementsByClassName("CodeMirror"))&&t[0]&&("default"===o.theme?t[0].style.backgroundColor="white":t[0].style.backgroundColor=""),this._codeMirrorEditor.setOption("theme",o.theme))}_getDefaultLanguage(){let t="";var o=document.cookie.split(";");for(let e=0;e<o.length;e++){var i=o[e].split("=");"default_lang"==i[0].trim()&&(t=i[1].trim())}return t}_setDefaultLanguageCookie(e){var t;e!=this._defaultLanguage&&(t=parseInt((new Date).getFullYear())+2,document.cookie=`default_lang=${e}; expires=Sat, 01 Jan ${t} 00:00:01 GMT; domain=.geeksforgeeks.org; path=/`)}async _setTabMessage(e,t=!1,o=!1){var i=this.shadowRoot.querySelector(".codeblock-container");o?(i.removeAttribute("data-danger-content"),i.removeAttribute("data-content")):(i.setAttribute(t?"data-danger-content":"data-content",e||"Some error occurred"),await new Promise(e=>setTimeout(e,3e3)),this._setTabMessage("",!1,!0))}_setupCollapsibleCodeButtons(){if(this._editorButtonDiv){Array.from(this._editorButtons.children).forEach(e=>e.style.display="none"),this._editorButtonDiv.style.justifyContent="center",this._editorButtons.style.marginTop="0px";let e=document.createElement("button"),t=(e.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>`,e.className="code-button",e.id="expand-code-button",e.title="Expand",document.createElement("button"));t.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" class="gfg-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+        <polyline points="18 9 12 3 6 9"></polyline>
+    </svg>`,t.className="code-button",t.id="collapse-code-button",t.title="Collapse",t.style.display="none",t.addEventListener("click",()=>{Array.from(this._editorButtons.children).forEach(e=>e.style.display="none"),this._editorButtonDiv.style.justifyContent="center",e.style.display="",t.style.display="none",this._editorButtons.style.marginTop="0px"}),e.addEventListener("click",()=>{Array.from(this._editorButtons.children).forEach(e=>e.style.display=""),t.style.display="",e.style.display="none",this._editorButtonDiv.style.justifyContent="flex-start",this._editorButtons.style.marginTop="20px"}),this._editorButtons.append(e),this._editorButtons.append(t)}}}customElements.define("gfg-tabs",h);let u=0;class p extends HTMLElement{static get observedAttributes(){return["selected"]}connectedCallback(){this.setAttribute("role","tab"),this.id||(this.id="gfg-tab-generated-"+u++),this.setAttribute("aria-selected","false"),this.setAttribute("tabindex",-1),this._upgradeProperty("selected")}_upgradeProperty(e){var t;this.hasOwnProperty(e)&&(t=this[e],delete this[e],this[e]=t)}attributeChangedCallback(){var e=this.hasAttribute("selected");this.setAttribute("aria-selected",e),this.setAttribute("tabindex",e?0:-1)}set selected(e){(e=Boolean(e))?this.setAttribute("selected",""):this.removeAttribute("selected")}get selected(){return this.hasAttribute("selected")}}customElements.define("gfg-tab",p);let m=0;class g extends HTMLElement{connectedCallback(){this.setAttribute("role","tabpanel"),this.id||(this.id="gfg-panel-generated-"+m++)}}customElements.define("gfg-panel",g)})();
